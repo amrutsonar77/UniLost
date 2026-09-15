@@ -1,0 +1,854 @@
+================================================================================
+                        UNILOST — FULL PROJECT REPORT
+                  Campus Lost & Found Platform — Version 2.0
+================================================================================
+
+  Project Type  : College Mini Project — Web Application
+  Platform      : Spring Boot (Java) + HTML/CSS/JavaScript + MySQL
+  Build Tool    : Apache Maven
+  Server Port   : 8080
+  Author        : Amrut (Parul University)
+  Report Date   : September 2026
+
+================================================================================
+  TABLE OF CONTENTS
+================================================================================
+
+  1.  Project Overview
+  2.  Problem Statement
+  3.  Objectives
+  4.  Tech Stack
+  5.  System Architecture
+  6.  Database Design (9 Tables)
+  7.  Features & Modules
+  8.  AI Matching Engine (Core Innovation)
+  9.  API Endpoints
+  10. Frontend Pages
+  11. Security & Authentication
+  12. File Structure
+  13. How to Run
+  14. Known Limitations
+  15. Future Scope
+
+================================================================================
+  1. PROJECT OVERVIEW
+================================================================================
+
+UniLost is a web-based Lost & Found management platform designed specifically
+for university campuses. When a student loses an item (wallet, ID card,
+earphones, bag, etc.) on campus, they can report it on UniLost. Similarly,
+if someone finds an item, they post it as a "Found Item". The platform then
+uses an AI matching engine to automatically compare lost and found reports
+and rank the best potential matches.
+
+The key innovation is the AI engine — it combines:
+  - Perceptual image hashing (pHash) using DCT
+  - Jaccard text similarity on descriptions/names
+  - Category exact matching
+  - Location overlap scoring
+  - Color and brand bonus scoring
+
+This replaces the manual bulletin board system (WhatsApp groups, notice boards)
+that most colleges still rely on, and makes the recovery process faster and
+more reliable.
+
+================================================================================
+  2. PROBLEM STATEMENT
+================================================================================
+
+Students at universities frequently lose personal belongings on campus.
+The current methods of recovering lost items are:
+
+  - Posting in WhatsApp groups (noisy, hard to search, no structure)
+  - Going to the admin office (slow, limited hours, items get misplaced)
+  - Pinning notices on physical boards (ineffective, no images)
+
+These methods have several problems:
+  - No image comparison — a text description of "black bag" matches hundreds
+  - No automated notifications — the owner may never see the found post
+  - No structured data — impossible to filter by category, date, location
+  - No direct messaging between finder and owner
+  - No accountability — no claim verification process
+
+UniLost solves all of these with a structured, AI-powered digital platform.
+
+================================================================================
+  3. OBJECTIVES
+================================================================================
+
+  Primary Objectives:
+  -------------------
+  [1] Provide a structured platform for reporting lost and found items
+  [2] Automate matching using AI (image + text + location + category)
+  [3] Enable direct messaging between students (finder ↔ owner)
+  [4] Allow claim submission with identity verification details
+  [5] Send real-time notifications for new AI matches
+  [6] Provide an admin dashboard for platform oversight
+
+  Secondary Objectives:
+  ---------------------
+  [7] Mobile-responsive design for use on phones
+  [8] Quick search across all reports
+  [9] User profile management
+  [10] Secure authentication (SHA-256 hashed passwords)
+
+================================================================================
+  4. TECH STACK
+================================================================================
+
+  BACKEND
+  -------
+  Language          : Java 17
+  Framework         : Spring Boot 3.2.5
+  ORM               : Spring Data JPA (Hibernate 6.4)
+  Database Driver   : MySQL Connector/J 8.3.0
+  Build Tool        : Apache Maven
+  Server            : Embedded Apache Tomcat 10.1
+  Validation        : Spring Boot Starter Validation
+  Password Hashing  : SHA-256 (custom PasswordUtil)
+  File Upload       : Spring Multipart (max 10MB)
+  Image Processing  : Java AWT (BufferedImage, Graphics2D, ImageIO)
+
+  FRONTEND
+  --------
+  HTML/CSS/JS       : Vanilla (no React/Vue/Angular — intentional for simplicity)
+  CSS Framework     : Bootstrap 5.3.3
+  Font              : Inter (Google Fonts)
+  Icons             : Inline SVG (no icon libraries)
+  Animations        : Pure CSS keyframes + JS transitions
+  Toast System      : Custom JS (no external library)
+
+  DATABASE
+  --------
+  DBMS              : MySQL 8
+  Schema Management : Hibernate DDL auto-update
+  Connection Pool   : HikariCP (default in Spring Boot)
+
+  DEPLOYMENT
+  ----------
+  Runs locally on   : http://localhost:8080
+  Static files      : Served from src/main/resources/static/
+  Uploads folder    : /uploads/ (created at runtime)
+
+================================================================================
+  5. SYSTEM ARCHITECTURE
+================================================================================
+
+  REQUEST FLOW:
+  =============
+
+  Browser (HTML/CSS/JS)
+      |
+      | HTTP Requests (REST API calls to /api/*)
+      |
+  Spring Boot Embedded Tomcat (port 8080)
+      |
+      |--- Static files (index.html, style.css, etc.) served directly
+      |
+      |--- /api/* requests routed to Controllers
+              |
+              |--- AuthController        (/api/auth/*)
+              |--- LostItemController    (/api/lost-items/*)
+              |--- FoundItemController   (/api/found-items/*)
+              |--- MatchController       (/api/matches/*)
+              |--- ClaimController       (/api/claims/*)
+              |--- MessageController     (/api/messages/*)
+              |--- NotificationController(/api/notifications/*)
+              |--- ProfileController     (/api/profile/*)
+              |--- AdminController       (/api/admin/*)
+              |
+              |--- Services (business logic)
+              |       |--- MatchingService (AI scoring)
+              |       |--- ImageMatchingService (pHash)
+              |       |--- NotificationService
+              |       |--- MessageService
+              |       |--- ClaimService
+              |       |--- OtpService (currently unused — no email required)
+              |
+              |--- Repositories (JPA interfaces)
+              |       |--- UserRepository
+              |       |--- LostItemRepository
+              |       |--- FoundItemRepository
+              |       |--- MatchRepository
+              |       |--- ConversationRepository
+              |       |--- MessageRepository
+              |       |--- ClaimRequestRepository
+              |       |--- NotificationRepository
+              |       |--- OtpTokenRepository
+              |
+              |--- MySQL Database (unilost_db)
+
+  LAYERED ARCHITECTURE:
+  =====================
+
+  Presentation Layer   →  HTML pages + JavaScript (frontend)
+  API Layer            →  REST Controllers (Spring MVC)
+  Business Logic Layer →  Services (AI matching, notifications, etc.)
+  Data Access Layer    →  JPA Repositories
+  Database Layer       →  MySQL tables
+
+================================================================================
+  6. DATABASE DESIGN (9 TABLES)
+================================================================================
+
+  TABLE 1: users
+  --------------
+  id             BIGINT PK AUTO_INCREMENT
+  full_name      VARCHAR(255) NOT NULL
+  email          VARCHAR(255) NOT NULL UNIQUE
+  password       VARCHAR(255) NOT NULL          -- SHA-256 hashed
+  role           VARCHAR(255) NOT NULL DEFAULT 'STUDENT'  -- STUDENT or ADMIN
+  college_name   VARCHAR(255)                   -- optional
+  email_verified TINYINT(1) NOT NULL DEFAULT 1
+  enabled        TINYINT(1) NOT NULL DEFAULT 1
+  student_id     VARCHAR(255)                   -- optional
+
+  TABLE 2: lost_items
+  -------------------
+  id             BIGINT PK AUTO_INCREMENT
+  item_name      VARCHAR(255) NOT NULL
+  description    VARCHAR(1000)
+  location       VARCHAR(255)
+  date           DATE
+  image_path     VARCHAR(500)                   -- path like /uploads/abc.jpg
+  user_id        BIGINT                         -- FK to users.id
+  category       VARCHAR(50)                    -- Electronics, Books, etc.
+  status         VARCHAR(20) DEFAULT 'PENDING'  -- PENDING / MATCHED / RECOVERED
+  color          VARCHAR(60)
+  brand          VARCHAR(60)
+  additional_details VARCHAR(1000)
+
+  TABLE 3: found_items
+  --------------------
+  (same structure as lost_items)
+
+  TABLE 4: matches
+  ----------------
+  id             BIGINT PK AUTO_INCREMENT
+  lost_item_id   BIGINT
+  found_item_id  BIGINT
+  image_score    DOUBLE
+  category_score DOUBLE
+  text_score     DOUBLE
+  location_score DOUBLE
+  match_score    DOUBLE                         -- final composite score (0–100)
+  confidence_label VARCHAR(30)                 -- "Very High Match", etc.
+  match_reasons  VARCHAR(1000)                 -- comma-separated reasons
+  created_at     DATETIME
+
+  TABLE 5: conversations
+  ----------------------
+  id             BIGINT PK AUTO_INCREMENT
+  item_id        BIGINT
+  item_type      VARCHAR(10)                    -- "LOST" or "FOUND"
+  user_one_id    BIGINT
+  user_two_id    BIGINT
+  created_at     DATETIME
+
+  TABLE 6: messages
+  -----------------
+  id             BIGINT PK AUTO_INCREMENT
+  conversation_id BIGINT
+  sender_id      BIGINT
+  message_text   VARCHAR(2000)
+  sent_at        DATETIME
+  is_read        BOOLEAN DEFAULT FALSE
+
+  TABLE 7: claim_requests
+  -----------------------
+  id             BIGINT PK AUTO_INCREMENT
+  found_item_id  BIGINT
+  claimant_user_id BIGINT
+  reason         VARCHAR(1000)
+  identifying_detail VARCHAR(1000)
+  lost_location  VARCHAR(255)
+  status         VARCHAR(20) DEFAULT 'PENDING'  -- PENDING/APPROVED/REJECTED
+  created_at     DATETIME
+
+  TABLE 8: notifications
+  ----------------------
+  id             BIGINT PK AUTO_INCREMENT
+  user_id        BIGINT
+  title          VARCHAR(255)
+  message        VARCHAR(1000)
+  type           VARCHAR(30)   -- AI_MATCH / NEW_MESSAGE / CLAIM_REQUEST / etc.
+  is_read        BOOLEAN DEFAULT FALSE
+  created_at     DATETIME
+
+  TABLE 9: otp_tokens
+  -------------------
+  id             BIGINT PK AUTO_INCREMENT
+  email          VARCHAR(255) NOT NULL
+  code           VARCHAR(6) NOT NULL
+  purpose        VARCHAR(10) NOT NULL            -- REGISTER or RESET
+  expires_at     DATETIME NOT NULL
+  created_at     DATETIME NOT NULL
+  attempts       INT NOT NULL DEFAULT 0
+  used           TINYINT(1) NOT NULL DEFAULT 0
+
+  Note: otp_tokens is created by Hibernate but currently unused since
+        OTP email verification was removed to simplify the registration flow.
+
+================================================================================
+  7. FEATURES & MODULES
+================================================================================
+
+  MODULE 1: USER AUTHENTICATION
+  ------------------------------
+  - Register with name, email, college, password (no email verification needed)
+  - Login with email + password
+  - Admin login (separate tab on login page, role-restricted)
+  - Forgot password — verify email → set new password directly (no OTP)
+  - Passwords stored as SHA-256 hash (never plain text)
+  - Session management via localStorage (JSON user object)
+  - Auto-redirect: admins → admin.html, students → index.html
+
+  MODULE 2: REPORT LOST ITEM
+  --------------------------
+  - Form: item name, category, color, brand, description, location, date,
+          additional details, photo upload (JPG/PNG/WebP, max 5MB)
+  - Tips sidebar with advice for better AI matches
+  - On submit: item saved to DB, AI matching runs immediately
+  - Immediate notification to user if a match ≥ 55% is found
+
+  MODULE 3: REPORT FOUND ITEM
+  ---------------------------
+  - Same form structure as lost item
+  - On submit: AI matching runs against all lost items immediately
+  - Finder receives notifications if owner is matched
+
+  MODULE 4: BROWSE LOST ITEMS
+  ---------------------------
+  - All lost item reports shown in a card grid
+  - Filter by: search keyword, category, status, color, location
+  - Paginated display with item images
+  - Click card → item details page
+
+  MODULE 5: BROWSE FOUND ITEMS
+  ----------------------------
+  - Same as lost items but for found reports
+
+  MODULE 6: AI MATCHES PAGE
+  -------------------------
+  - Shows all AI-generated matches with scores
+  - Match score displayed as percentage + confidence label
+  - Score breakdown: image, category, text, location scores
+  - Reasons shown as tags (e.g. "Same category", "Similar appearance")
+  - "Generate Matches" button triggers full re-scan
+  - Matches ranked by score (highest first)
+  - Color-coded confidence badges
+
+  MODULE 7: ITEM DETAILS
+  ----------------------
+  - Full item information: name, category, color, brand, date, location,
+    description, photo, additional details, status badge
+  - "Claim This Item" button → opens claim modal
+  - Claim form: reason, unique identifying detail, lost location
+  - "Contact" button → opens a direct message conversation
+  - See all AI matches for this item
+
+  MODULE 8: MESSAGES (DIRECT CHAT)
+  ---------------------------------
+  - Conversation list panel (left) + chat area (right)
+  - Real-time-style polling for new messages
+  - Conversations created when user clicks "Contact" on an item
+  - Unread message counter badge
+  - Messages stored in DB (conversation_id, sender_id, text, timestamp)
+
+  MODULE 9: CLAIM REQUESTS
+  ------------------------
+  - Student fills in: why it's theirs, unique detail, where they lost it
+  - Claim stored with PENDING status
+  - Admin can APPROVE or REJECT claims
+  - Owner and finder are notified of claim outcome
+  - Approved claim → item status updated to RECOVERED
+
+  MODULE 10: NOTIFICATIONS
+  ------------------------
+  Notification types:
+    AI_MATCH        — new match found for your item
+    NEW_MESSAGE     — someone sent you a message
+    CLAIM_REQUEST   — someone claimed your found item
+    CLAIM_APPROVED  — your claim was approved
+    CLAIM_REJECTED  — your claim was rejected
+  - Bell icon in navbar with unread count badge
+  - Dropdown shows last 10 notifications
+  - Auto-mark as read when dropdown opened
+
+  MODULE 11: USER PROFILE
+  -----------------------
+  - View stats: lost reports, found reports, recovered items
+  - Edit full name and college name
+  - Email is locked (cannot change)
+  - Quick links to My Reports and Messages
+
+  MODULE 12: MY REPORTS
+  ---------------------
+  - Tabbed view: Lost Items tab | Found Items tab
+  - See all items you've reported
+  - Edit any report (name, category, color, brand, description,
+    location, date, additional details, replace photo)
+  - Delete reports
+  - Status shown on each card
+
+  MODULE 13: ADMIN DASHBOARD
+  --------------------------
+  - Stats overview: total users, lost items, found items, matches, claims
+  - Live activity dot indicator
+  - User management: view all users, delete accounts
+  - Lost/Found item management: view all, delete
+  - Claims management: approve or reject pending claims
+  - AI Matches: view all generated matches, run new matching
+  - Sidebar navigation with active section indicator
+  - Restricted to ADMIN role accounts only
+
+================================================================================
+  8. AI MATCHING ENGINE (CORE INNOVATION)
+================================================================================
+
+  The AI matching engine is the most technically advanced part of UniLost.
+  It uses a composite scoring system combining 4 signals.
+
+  ── SIGNAL 1: IMAGE SIMILARITY (pHash) ──────────────────────────────────────
+
+  Algorithm: Perceptual Hashing (pHash) with DCT
+  Implemented in: ImageMatchingService.java
+
+  Steps:
+  1. Load both images from disk using Java ImageIO
+  2. Resize each image to 32×32 pixels (grayscale)
+  3. Apply 2D Discrete Cosine Transform (DCT) to the 32×32 grid
+  4. Extract the top-left 8×8 block (64 DCT coefficients — low frequency info)
+  5. Compute the mean of those 64 values
+  6. Build a 64-bit hash: bit[i] = 1 if DCT[i] >= mean, else 0
+  7. Compare two hashes using Hamming Distance:
+       similarity = (1 - hammingDistance / 64) × 100
+
+  Why pHash?
+  - Tolerant to resizing, compression, slight rotation
+  - Color-blind (grayscale) — structure matters, not exact colors
+  - Pure Java — no OpenCV or external libraries needed
+  - Fast — compares hundreds of pairs in milliseconds
+
+  Score interpretation:
+    ≥ 90 → Very likely the same item
+    75-89 → Similar appearance
+    50-74 → Possibly similar
+    < 50  → Visually different
+
+  ── SIGNAL 2: TEXT SIMILARITY (Jaccard) ──────────────────────────────────────
+
+  Algorithm: Jaccard Similarity on tokenized text
+
+  Process:
+  1. Tokenize item name, description, brand into word sets
+  2. Remove stop words (a, the, is, in, on, with, and, etc.)
+  3. Compute: |intersection| / |union| × 100
+
+  Weighted:
+    Item name      → 50% of text score
+    Description    → 30% of text score
+    Brand (exact)  → 20% of text score
+
+  ── SIGNAL 3: CATEGORY SIMILARITY ───────────────────────────────────────────
+
+  Exact string match on category (e.g. "Electronics" == "Electronics" → 100%)
+  Categories: Electronics, ID Cards, Books, Bags, Keys, Clothing,
+              Accessories, Documents, Water Bottles, Other
+
+  ── SIGNAL 4: LOCATION SIMILARITY ───────────────────────────────────────────
+
+  1. Exact match → 100 points
+  2. One contains the other → 70 points
+     (e.g. "Library 2nd Floor" contains "Library")
+  3. Word overlap (Jaccard on location tokens) → proportional score
+
+  ── BONUS: COLOR + BRAND ─────────────────────────────────────────────────────
+
+  Color exact match → +5 to +10 bonus points
+  Color partial ("dark blue" vs "blue") → +2.5 to +5 bonus points
+  Brand exact match → +5 bonus points
+
+  ── COMPOSITE SCORE ─────────────────────────────────────────────────────────
+
+  When BOTH items have images:
+    Final Score = (Image × 60%) + (Category × 20%) + (Text × 10%)
+                + (Location × 10%) + color/brand bonus
+
+  When ONE or BOTH items have NO image:
+    Final Score = (Category × 40%) + (Text × 35%) + (Location × 25%)
+                + larger color/brand bonus
+
+  This adaptive weighting ensures text-only matches still work well
+  when users don't upload photos.
+
+  ── THRESHOLDS ───────────────────────────────────────────────────────────────
+
+  Save to DB threshold    : ≥ 25%   (generous, user decides relevance)
+  Notification threshold  : ≥ 55%   (only notify for meaningful matches)
+  Confidence labels:
+    ≥ 90% → "Very High Match"
+    ≥ 75% → "High Match"
+    ≥ 55% → "Possible Match"
+    < 55% → "Low Match"
+
+  ── WHEN MATCHING RUNS ───────────────────────────────────────────────────────
+
+  Automatically:
+  - When a new lost item is reported → matched against all found items
+  - When a new found item is reported → matched against all lost items
+
+  Manually:
+  - Admin "Generate Matches" button → scans all lost × found pairs
+  - User "Generate Matches" button on the Matches page
+
+================================================================================
+  9. API ENDPOINTS
+================================================================================
+
+  AUTH  (/api/auth)
+  -----------------
+  POST /register              Register a new student account (direct, no OTP)
+  POST /send-otp              Alias for /register (backward compatibility)
+  POST /verify-register       No-op alias (OTP removed)
+  POST /login                 Student login → returns user JSON
+  POST /admin-login           Admin login → returns user JSON (role=ADMIN only)
+  POST /forgot-password       Verify email exists → return reset token
+  POST /verify-otp-reset      Alias/no-op (OTP removed)
+  POST /reset-password        Set new password using reset token
+
+  LOST ITEMS  (/api/lost-items)
+  -----------------------------
+  GET  /                      Get all lost items (with optional filters)
+  GET  /{id}                  Get single lost item
+  POST /                      Create lost item report (multipart with image)
+  PUT  /{id}                  Update lost item
+  DELETE /{id}                Delete lost item
+
+  FOUND ITEMS  (/api/found-items)
+  --------------------------------
+  GET  /                      Get all found items
+  GET  /{id}                  Get single found item
+  POST /                      Create found item report (multipart with image)
+  PUT  /{id}                  Update found item
+  DELETE /{id}                Delete found item
+
+  MATCHES  (/api/matches)
+  -----------------------
+  GET  /                      Get all matches
+  GET  /lost/{lostItemId}     Get live matches for a specific lost item
+  POST /generate              Generate matches for all items (admin)
+  DELETE /{id}                Delete a match
+
+  CLAIMS  (/api/claims)
+  ---------------------
+  POST /                      Submit a claim request
+  GET  /found/{foundItemId}   Get all claims for a found item
+  PUT  /{id}/approve          Approve a claim (admin/finder)
+  PUT  /{id}/reject           Reject a claim (admin/finder)
+
+  MESSAGES  (/api/messages)
+  -------------------------
+  GET  /conversations/{userId}        Get all conversations for user
+  POST /conversations                  Start a new conversation
+  GET  /conversations/{id}/messages    Get messages in a conversation
+  POST /conversations/{id}/messages    Send a message
+  PUT  /messages/{id}/read             Mark message as read
+
+  NOTIFICATIONS  (/api/notifications)
+  ------------------------------------
+  GET  /{userId}               Get all notifications for user
+  GET  /{userId}/unread-count  Get unread notification count
+  PUT  /{userId}/read-all      Mark all notifications as read
+
+  PROFILE  (/api/profile)
+  -----------------------
+  GET  /{userId}              Get user profile + stats
+  PUT  /{userId}              Update full name and college name
+
+  ADMIN  (/api/admin)
+  -------------------
+  GET  /stats                 Get platform-wide statistics
+  GET  /users                 Get all users
+  DELETE /users/{id}          Delete a user account
+  GET  /lost-items            Get all lost items (admin view)
+  GET  /found-items           Get all found items (admin view)
+  DELETE /lost-items/{id}     Delete a lost item report
+  DELETE /found-items/{id}    Delete a found item report
+  GET  /claims                Get all claim requests
+  PUT  /claims/{id}/approve   Approve a claim
+  PUT  /claims/{id}/reject    Reject a claim
+
+================================================================================
+  10. FRONTEND PAGES (14 HTML FILES)
+================================================================================
+
+  Page                URL                     Description
+  ------------------  ----------------------  --------------------------------
+  Homepage            /index.html             Hero, stats, search, recent items
+                                              dashboard mockup, how-it-works
+  Lost Items          /lost-items.html        Browse + filter lost reports
+  Found Items         /found-items.html       Browse + filter found reports
+  AI Matches          /matches.html           View AI-generated matches
+  Item Details        /item-details.html      Full item view + claim + contact
+  Report Lost         /report-lost.html       Form to report a lost item
+  Report Found        /report-found.html      Form to report a found item
+  Messages            /messages.html          Direct chat between users
+  My Reports          /my-reports.html        User's own reports + edit/delete
+  Profile             /profile.html           View + edit profile, see stats
+  Login               /login.html             Student + Admin login tabs
+  Register            /register.html          Create new account (single step)
+  Forgot Password     /forgot-password.html   2-step: email → new password
+  Admin Dashboard     /admin.html             Full admin control panel
+  Admin Login         /admin-login.html       Standalone admin portal login
+
+  Design System:
+  - Color palette: White Lilac (#F8F8F9), Dark Navy (#111439), Purple (#7c3aed)
+  - Gradient: purple → cyan → gold → pink (brand gradient)
+  - Stripe-inspired design with pill-shaped buttons
+  - Page transitions: circular iris reveal (clip-path animation)
+  - Responsive: works on mobile (Bootstrap grid)
+
+================================================================================
+  11. SECURITY & AUTHENTICATION
+================================================================================
+
+  Password Security:
+  - All passwords hashed with SHA-256 before storage
+  - No plain text passwords ever stored or logged
+  - Implemented in PasswordUtil.java
+
+  Session Management:
+  - User session stored in browser localStorage as JSON
+  - No server-side sessions (stateless REST API)
+  - Client sends user ID in API calls for user-specific data
+  - Note: this is appropriate for a college project, not production grade
+
+  Route Protection:
+  - requireLogin() in common.js redirects to login if no session
+  - requireAdmin() checks role === "ADMIN" before admin access
+  - Backend re-validates role on sensitive admin endpoints
+
+  Input Validation:
+  - Email format validated with regex (both frontend + backend)
+  - Password minimum 6 characters enforced
+  - All text inputs sanitized with escHtml() before rendering
+  - File upload restricted to JPG/PNG/WebP, max 5MB
+
+  Reset Token Security:
+  - Password reset uses a time-limited token (Base64 of email + timestamp)
+  - Token expires after 15 minutes
+  - Email must match token to reset password
+
+================================================================================
+  12. FILE STRUCTURE
+================================================================================
+
+  Unilost_2.0_new/
+  ├── pom.xml                          Maven build config
+  ├── schema.sql                       Database schema reference
+  ├── README.md
+  ├── images/
+  │   └── unilost_hero_parul_university.png
+  └── src/
+      └── main/
+          ├── java/com/unilost/
+          │   ├── UnilostApplication.java          Spring Boot entry point
+          │   ├── config/
+          │   │   └── WebConfig.java               Static file + CORS config
+          │   ├── controller/
+          │   │   ├── AuthController.java          Login, register, reset
+          │   │   ├── LostItemController.java      Lost item CRUD
+          │   │   ├── FoundItemController.java     Found item CRUD
+          │   │   ├── MatchController.java         AI match queries
+          │   │   ├── ClaimController.java         Claim request management
+          │   │   ├── MessageController.java       Chat / conversations
+          │   │   ├── NotificationController.java  Bell notifications
+          │   │   ├── ProfileController.java       User profile
+          │   │   └── AdminController.java         Admin dashboard data
+          │   ├── entity/
+          │   │   ├── User.java
+          │   │   ├── LostItem.java
+          │   │   ├── FoundItem.java
+          │   │   ├── Match.java
+          │   │   ├── Conversation.java
+          │   │   ├── Message.java
+          │   │   ├── ClaimRequest.java
+          │   │   ├── Notification.java
+          │   │   └── OtpToken.java
+          │   ├── repository/            JPA interfaces (auto-implemented)
+          │   │   └── [9 Repository interfaces]
+          │   ├── service/
+          │   │   ├── MatchingService.java         Composite AI scoring
+          │   │   ├── ImageMatchingService.java    pHash image comparison
+          │   │   ├── NotificationService.java     Create/manage notifications
+          │   │   ├── MessageService.java          Chat logic
+          │   │   ├── ClaimService.java            Claim approval logic
+          │   │   └── OtpService.java              OTP (currently unused)
+          │   └── util/
+          │       ├── PasswordUtil.java            SHA-256 hashing
+          │       └── FileStorageUtil.java         Image upload/save
+          └── resources/
+              ├── application.properties           DB + SMTP + app config
+              └── static/                          All frontend files
+                  ├── index.html
+                  ├── [13 other HTML pages]
+                  ├── css/
+                  │   └── style.css                Global design system (~1400 lines)
+                  └── js/
+                      ├── common.js                Shared: navbar, API, transitions
+                      ├── auth.js                  Login + register + reset
+                      ├── home.js                  Homepage data loading
+                      ├── lost-list.js             Lost items page
+                      ├── found-list.js            Found items page
+                      ├── matches.js               Matches page
+                      ├── item-details.js          Item details page
+                      ├── lost.js                  Report lost form
+                      ├── found.js                 Report found form
+                      ├── messages.js              Chat page
+                      ├── my-reports.js            My reports page
+                      ├── profile.js               Profile page
+                      ├── admin.js                 Admin dashboard
+                      ├── icons.js                 SVG icon helpers
+                      └── logo.js                  Logo rendering
+
+================================================================================
+  13. HOW TO RUN
+================================================================================
+
+  Prerequisites:
+  --------------
+  - Java 17 or higher installed
+  - MySQL 8 running on localhost:3306
+  - Maven installed (or use the Maven wrapper)
+  - Internet connection (for Bootstrap CDN + Google Fonts on first load)
+
+  Step 1 — Configure Database:
+  -----------------------------
+  Edit src/main/resources/application.properties:
+
+    spring.datasource.url=jdbc:mysql://localhost:3306/unilost_db?createDatabaseIfNotExist=true
+    spring.datasource.username=root
+    spring.datasource.password=YOUR_MYSQL_PASSWORD
+
+  Step 2 — Run the Application:
+  ------------------------------
+    mvn clean spring-boot:run
+
+  Step 3 — Open in Browser:
+  --------------------------
+    http://localhost:8080
+
+  Step 4 — Create Admin Account:
+  --------------------------------
+  1. Register a normal account
+  2. Run this SQL to promote it to admin:
+     UPDATE users SET role = 'ADMIN' WHERE email = 'your@email.com';
+  3. Log in using the Admin tab on the login page
+
+  Note: The /uploads/ folder is created automatically when the first
+  image is uploaded. Uploaded images are stored there.
+
+================================================================================
+  14. KNOWN LIMITATIONS
+================================================================================
+
+  [1] No real email verification — registration is instant (no OTP)
+      This was removed to simplify setup. In production, email verification
+      would be required.
+
+  [2] Stateless auth via localStorage — not suitable for production.
+      A proper app would use JWT tokens or server-side sessions with cookies.
+
+  [3] No HTTPS — runs on plain HTTP. Production deployment requires SSL.
+
+  [4] pHash is approximate — two different items that look similar structurally
+      might score high (e.g. two black wallets). Human judgment is still needed.
+
+  [5] No WebSocket — messages use polling (API calls every few seconds).
+      True real-time messaging would require WebSocket/SSE.
+
+  [6] Images stored on local disk — in production, cloud storage (S3, etc.)
+      would be used. Uploaded files are lost if server is moved.
+
+  [7] No rate limiting on API endpoints — a production API needs rate limiting
+      to prevent abuse.
+
+  [8] Admin sidebar hidden on mobile — admin dashboard requires larger screens.
+      No responsive admin navigation currently.
+
+  [9] SHA-256 for passwords — while better than plain text, bcrypt or Argon2
+      is the industry standard for password hashing.
+
+================================================================================
+  15. FUTURE SCOPE
+================================================================================
+
+  [1] EMAIL NOTIFICATIONS
+      Re-enable OTP email verification and send notifications for new matches
+      using a configured SMTP server (Gmail App Password or SendGrid).
+
+  [2] MOBILE APP
+      Build a React Native or Flutter app using the existing REST API.
+      All API endpoints are already structured for mobile consumption.
+
+  [3] DEEP LEARNING IMAGE MATCHING
+      Replace pHash with a CNN-based feature extractor (e.g. MobileNet)
+      for more accurate visual similarity, especially for rotated/occluded items.
+
+  [4] REAL-TIME MESSAGING
+      Replace polling with WebSocket (Spring WebSocket + STOMP) for instant
+      message delivery without repeated API calls.
+
+  [5] GEOLOCATION
+      Add GPS coordinates to lost/found reports. Use proximity scoring
+      (distance in meters) instead of text-based location matching.
+
+  [6] MULTI-CAMPUS SUPPORT
+      Allow multiple universities to use the platform with isolated data
+      per institution. Users only see items from their own campus.
+
+  [7] QR CODE SYSTEM
+      Generate a QR code for each reported item. Print and stick on notice
+      boards. Scanning the QR takes you to the item details page.
+
+  [8] ADVANCED FILTERS
+      Add date range filter, distance radius filter, and saved search
+      alerts (notify me when an item matching my criteria is posted).
+
+  [9] DARK MODE
+      The design system already supports CSS variables — adding a dark mode
+      toggle would be straightforward.
+
+  [10] ANALYTICS DASHBOARD
+      Add recovery rate tracking, average time to recover, most common
+      lost item categories, busiest campus locations, etc.
+
+================================================================================
+  SUMMARY
+================================================================================
+
+  UniLost is a full-stack campus Lost & Found platform that combines:
+
+  → A clean, modern web UI (Stripe-inspired, mobile-responsive)
+  → A Spring Boot REST API with 9 controllers and 9 database tables
+  → An AI matching engine using pHash + Jaccard + category + location scoring
+  → Direct messaging between students
+  → A claim verification workflow
+  → Real-time notifications
+  → A full admin dashboard
+
+  The project demonstrates practical application of:
+    - Spring Boot (REST API, JPA, file upload, Spring MVC)
+    - MySQL (relational DB design, Hibernate ORM)
+    - Digital Signal Processing (DCT-based perceptual hashing)
+    - Information Retrieval (Jaccard similarity, tokenization, stop words)
+    - Frontend JavaScript (fetch API, DOM manipulation, CSS animations)
+    - UI/UX Design (responsive layout, accessibility, microinteractions)
+
+  Lines of code:  ~5,000+ (Java) + ~4,000+ (JS) + ~1,400 (CSS) + ~1,500 (HTML)
+  Total files:    37 Java files + 16 HTML + 1 CSS + 15 JS
+
+================================================================================
+  END OF REPORT
+================================================================================

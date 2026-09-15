@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UniLost — My Reports</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+  <div id="navbarPlaceholder"></div>
+  <script>window.ACTIVE_NAV="myReports";</script>
+
+  <div class="page-hero hero-illustrated">
+    <div class="container">
+      <div class="hi-inner">
+        <div class="hi-copy">
+          <span class="section-label">Your Activity</span>
+          <h1>
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            My Reports
+          </h1>
+          <p>View and manage all your lost and found item reports.</p>
+        </div>
+        <div class="hi-visual">
+          <!-- My Reports illustration — person viewing report list -->
+          <svg viewBox="0 0 280 220" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:220px;">
+            <!-- bg blob -->
+            <ellipse cx="182" cy="120" rx="100" ry="90" fill="rgba(124,58,237,0.07)"/>
+            <!-- report card UI -->
+            <rect x="118" y="38" width="138" height="152" rx="12" fill="white" stroke="#E5E7EB" stroke-width="1.5"/>
+            <rect x="118" y="38" width="138" height="10" rx="12" fill="#7C3AED" opacity=".15"/>
+            <text x="128" y="62" font-size="9" fill="#7C3AED" font-family="Inter,sans-serif" font-weight="700">MY REPORTS</text>
+            <!-- row 1 -->
+            <rect x="128" y="72" width="24" height="24" rx="6" fill="#EDE9FE"/>
+            <text x="134" y="88" font-size="13">👜</text>
+            <rect x="158" y="75" width="60" height="6" rx="3" fill="#1F2937"/>
+            <rect x="158" y="84" width="44" height="5" rx="2.5" fill="#9CA3AF"/>
+            <rect x="218" y="74" width="28" height="14" rx="7" fill="#D1FAE5"/>
+            <text x="222" y="85" font-size="8" fill="#059669" font-family="Inter,sans-serif" font-weight="700">Found</text>
+            <line x1="128" y1="102" x2="248" y2="102" stroke="#F3F4F6" stroke-width="1"/>
+            <!-- row 2 -->
+            <rect x="128" y="108" width="24" height="24" rx="6" fill="#FEF3C7"/>
+            <text x="134" y="124" font-size="13">🔑</text>
+            <rect x="158" y="111" width="52" height="6" rx="3" fill="#1F2937"/>
+            <rect x="158" y="120" width="38" height="5" rx="2.5" fill="#9CA3AF"/>
+            <rect x="218" y="110" width="28" height="14" rx="7" fill="#FEF3C7"/>
+            <text x="220" y="121" font-size="8" fill="#D97706" font-family="Inter,sans-serif" font-weight="700">Pending</text>
+            <line x1="128" y1="138" x2="248" y2="138" stroke="#F3F4F6" stroke-width="1"/>
+            <!-- row 3 -->
+            <rect x="128" y="144" width="24" height="24" rx="6" fill="#DBEAFE"/>
+            <text x="134" y="160" font-size="13">📱</text>
+            <rect x="158" y="147" width="56" height="6" rx="3" fill="#1F2937"/>
+            <rect x="158" y="156" width="42" height="5" rx="2.5" fill="#9CA3AF"/>
+            <rect x="218" y="146" width="28" height="14" rx="7" fill="#EDE9FE"/>
+            <text x="219" y="157" font-size="7.5" fill="#7C3AED" font-family="Inter,sans-serif" font-weight="700">Matched</text>
+            <!-- clock icon top right -->
+            <circle cx="222" cy="26" r="18" fill="#FEF3C7"/>
+            <circle cx="222" cy="26" r="13" fill="#FDE68A"/>
+            <line x1="222" y1="20" x2="222" y2="26" stroke="#D97706" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="222" y1="26" x2="228" y2="30" stroke="#D97706" stroke-width="2.5" stroke-linecap="round"/>
+            <!-- person -->
+            <ellipse cx="78" cy="208" rx="34" ry="13" fill="rgba(124,58,237,0.10)"/>
+            <rect x="56" y="140" width="44" height="62" rx="22" fill="#4F46E5"/>
+            <rect x="60" y="140" width="36" height="28" rx="18" fill="#6366F1"/>
+            <path d="M56 162 Q36 168 32 185" stroke="#6366F1" stroke-width="16" stroke-linecap="round"/>
+            <path d="M100 162 Q116 166 118 178" stroke="#6366F1" stroke-width="16" stroke-linecap="round"/>
+            <circle cx="78" cy="118" r="26" fill="#FBBF24"/>
+            <circle cx="70" cy="114" r="4" fill="#1F2937"/>
+            <circle cx="86" cy="114" r="4" fill="#1F2937"/>
+            <path d="M70 128 Q78 136 86 128" stroke="#1F2937" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+            <path d="M52 110 Q54 92 78 90 Q102 92 104 110" fill="#374151"/>
+            <!-- sparkles -->
+            <text x="40" y="72" font-size="14" fill="#A78BFA" opacity=".7">✦</text>
+            <text x="258" y="95" font-size="12" fill="#60A5FA" opacity=".8">✦</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container page-wrapper" style="padding-top:28px;">
+
+    <div class="tab-pill">
+      <button class="active" id="tabLostBtn" onclick="switchTab('lost')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:5px;"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>
+        Lost Items
+      </button>
+      <button id="tabFoundBtn" onclick="switchTab('found')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:5px;"><polyline points="20 6 9 17 4 12"/></svg>
+        Found Items
+      </button>
+    </div>
+
+    <div id="lostSection"><div id="myLostContainer" class="row g-4"></div></div>
+    <div id="foundSection" style="display:none;"><div id="myFoundContainer" class="row g-4"></div></div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div class="modal fade" id="editModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content" style="background:var(--bg-1);border:1px solid var(--border-2);border-radius:var(--r-xl);">
+        <div class="modal-header" style="border-bottom:1px solid var(--border);padding:18px 26px;">
+          <h5 class="modal-title" style="font-weight:800;font-size:.95rem;color:var(--text);display:flex;align-items:center;gap:8px;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            Edit Item
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body" style="padding:24px 26px;">
+          <div id="editAlert" class="alert d-none" style="border-radius:var(--r-sm);font-size:.85rem;"></div>
+          <form id="editForm" novalidate>
+            <input type="hidden" id="editId"><input type="hidden" id="editType">
+            <div class="row g-3 mb-3">
+              <div class="col-md-8"><label class="form-label">Item Name <span style="color:var(--danger)">*</span></label><input type="text" class="form-control" id="editItemName" required maxlength="120"><div class="invalid-feedback">Required.</div></div>
+              <div class="col-md-4"><label class="form-label">Category</label><select class="form-select" id="editCategory"></select></div>
+            </div>
+            <div class="row g-3 mb-3">
+              <div class="col-md-6"><label class="form-label">Color</label><input type="text" class="form-control" id="editColor" maxlength="60"></div>
+              <div class="col-md-6"><label class="form-label">Brand</label><input type="text" class="form-control" id="editBrand" maxlength="60"></div>
+            </div>
+            <div class="mb-3"><label class="form-label">Description <span style="color:var(--danger)">*</span></label><textarea class="form-control" id="editDescription" rows="3" required maxlength="1000"></textarea><div class="invalid-feedback">Required.</div></div>
+            <div class="row g-3 mb-3">
+              <div class="col-md-8"><label class="form-label">Location <span style="color:var(--danger)">*</span></label><input type="text" class="form-control" id="editLocation" required><div class="invalid-feedback">Required.</div></div>
+              <div class="col-md-4"><label class="form-label">Date <span style="color:var(--danger)">*</span></label><input type="date" class="form-control" id="editDate" required><div class="invalid-feedback">Required.</div></div>
+            </div>
+            <div class="mb-3"><label class="form-label">Additional Details</label><textarea class="form-control" id="editAdditionalDetails" rows="2" maxlength="1000"></textarea></div>
+            <div class="mb-4">
+              <label class="form-label">Replace Image</label>
+              <input type="file" class="form-control" id="editImage" accept=".jpg,.jpeg,.png,.webp">
+              <div style="font-size:.72rem;color:var(--text-4);margin-top:4px;">Leave blank to keep existing. JPG/PNG/WebP, max 5 MB.</div>
+              <div id="editImageError" class="d-none" style="color:var(--danger);font-size:.78rem;margin-top:4px;"></div>
+            </div>
+            <button type="submit" class="btn-uni-primary btn w-100 py-2" id="editSaveBtn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Save Changes
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>UniLost &copy; 2026 &nbsp;·&nbsp; Campus Lost &amp; Found</footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/common.js"></script><script src="js/my-reports.js"></script>
+  <script>
+    function switchTab(tab) {
+      document.getElementById("lostSection").style.display  = tab==="lost" ?"":"none";
+      document.getElementById("foundSection").style.display = tab==="found"?"":"none";
+      document.getElementById("tabLostBtn").classList.toggle("active",  tab==="lost");
+      document.getElementById("tabFoundBtn").classList.toggle("active", tab==="found");
+    }
+  </script>
+</body></html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UniLost — Admin</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+  <div class="admin-topbar">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <span class="brand-mark" style="width:26px;height:26px;">
+        <svg width="15" height="15" viewBox="0 0 20 20" fill="none"><circle cx="8.5" cy="8.5" r="5.5" stroke="#ffffff" stroke-width="2"/><circle cx="8.5" cy="7.5" r="1.6" fill="#ffffff"/><path d="M8.5 9.1 C7.2 10.8 8.5 12.5 8.5 12.5 C8.5 12.5 9.8 10.8 8.5 9.1Z" fill="#ffffff"/><line x1="13" y1="13" x2="18.5" y2="18.5" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/></svg>
+      </span>
+      <span style="font-weight:800;font-size:.95rem;color:var(--text);">UniLost Admin</span>
+      <span class="live-dot"></span>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <a href="index.html" style="font-size:.78rem;color:var(--text-3);display:inline-flex;align-items:center;gap:5px;">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        Student Portal
+      </a>
+      <button onclick="logoutUser()" style="background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--text-3);font-size:.78rem;padding:5px 13px;border-radius:var(--r-xs);cursor:pointer;display:inline-flex;align-items:center;gap:5px;">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Logout
+      </button>
+    </div>
+  </div>
+
+  <div class="admin-body">
+    <!-- Sidebar -->
+    <div class="admin-sidebar">
+      <div class="admin-nav-section">Overview</div>
+      <button class="admin-nav-item active" onclick="showTab('dashboard')">
+        <span class="admin-nav-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>Dashboard
+      </button>
+      <div class="admin-nav-section" style="margin-top:8px;">Manage</div>
+      <button class="admin-nav-item" onclick="showTab('users')">
+        <span class="admin-nav-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>Users
+      </button>
+      <button class="admin-nav-item" onclick="showTab('lost')">
+        <span class="admin-nav-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg></span>Lost Items
+      </button>
+      <button class="admin-nav-item" onclick="showTab('found')">
+        <span class="admin-nav-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></span>Found Items
+      </button>
+      <button class="admin-nav-item" onclick="showTab('claims')">
+        <span class="admin-nav-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg></span>Claims
+      </button>
+      <button class="admin-nav-item" onclick="showTab('matches')">
+        <span class="admin-nav-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/></svg></span>AI Matches
+      </button>
+    </div>
+
+    <!-- Main -->
+    <div class="admin-main">
+      <!-- Dashboard -->
+      <div class="tab-panel active" id="tab-dashboard">
+        <div class="admin-page-header">
+          <div><div class="admin-page-title">Dashboard</div><div class="admin-page-sub">Platform overview</div></div>
+          <button class="btn-uni-primary btn btn-sm px-4" onclick="loadStats()" style="display:inline-flex;align-items:center;gap:6px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+            Refresh
+          </button>
+        </div>
+        <div class="row g-4 mb-5">
+          <div class="col-lg-2 col-md-4 col-6"><div class="admin-stat-card"><div class="icon-wrap"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div class="num" id="statUsers">—</div><div class="label">Users</div></div></div>
+          <div class="col-lg-2 col-md-4 col-6"><div class="admin-stat-card"><div class="icon-wrap"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg></div><div class="num" id="statLost">—</div><div class="label">Lost Items</div></div></div>
+          <div class="col-lg-2 col-md-4 col-6"><div class="admin-stat-card"><div class="icon-wrap"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div><div class="num" id="statFound">—</div><div class="label">Found Items</div></div></div>
+          <div class="col-lg-2 col-md-4 col-6"><div class="admin-stat-card"><div class="icon-wrap"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div class="num" id="statRecovered">—</div><div class="label">Recovered</div></div></div>
+          <div class="col-lg-2 col-md-4 col-6"><div class="admin-stat-card"><div class="icon-wrap"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/></svg></div><div class="num" id="statMatches">—</div><div class="label">AI Matches</div></div></div>
+          <div class="col-lg-2 col-md-4 col-6"><div class="admin-stat-card" style="border-color:rgba(255,196,0,.2);"><div class="icon-wrap" style="background:rgba(255,196,0,.1);border-color:rgba(255,196,0,.2);color:#ffc400;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="num" id="statClaims" style="color:var(--warning);">—</div><div class="label">Pending Claims</div></div></div>
+        </div>
+        <div class="row g-3">
+          <div class="col-md-3"><button class="btn-uni-primary btn w-100" onclick="showTab('users')" style="justify-content:center;">Manage Users</button></div>
+          <div class="col-md-3"><button class="btn-outline-green btn w-100" onclick="showTab('claims')" style="justify-content:center;">Review Claims</button></div>
+          <div class="col-md-3"><button class="btn-outline-green btn w-100" onclick="showTab('matches')" style="justify-content:center;">AI Matches</button></div>
+          <div class="col-md-3"><button onclick="generateAndReload()" style="background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.18);color:#7c3aed;font-size:.875rem;padding:10px;border-radius:var(--r-sm);cursor:pointer;width:100%;font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:6px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Run AI Matching</button></div>
+        </div>
+      </div>
+
+      <!-- Users -->
+      <div class="tab-panel" id="tab-users">
+        <div class="admin-page-header"><div><div class="admin-page-title">Users</div><div class="admin-page-sub">All registered accounts</div></div></div>
+        <div style="overflow-x:auto;"><table class="admin-table"><thead><tr><th>ID</th><th>Name</th><th>Email</th><th>College</th><th>Role</th><th>Action</th></tr></thead><tbody id="usersTableBody"><tr><td colspan="6" style="text-align:center;padding:32px;color:var(--text-4);">Loading…</td></tr></tbody></table></div>
+      </div>
+
+      <!-- Lost Items -->
+      <div class="tab-panel" id="tab-lost">
+        <div class="admin-page-header"><div><div class="admin-page-title">Lost Items</div><div class="admin-page-sub">All lost item reports</div></div></div>
+        <div style="overflow-x:auto;"><table class="admin-table"><thead><tr><th>ID</th><th>Item</th><th>Category</th><th>Color</th><th>Location</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead><tbody id="lostTableBody"><tr><td colspan="8" style="text-align:center;padding:32px;color:var(--text-4);">Loading…</td></tr></tbody></table></div>
+      </div>
+
+      <!-- Found Items -->
+      <div class="tab-panel" id="tab-found">
+        <div class="admin-page-header"><div><div class="admin-page-title">Found Items</div><div class="admin-page-sub">All found item reports</div></div></div>
+        <div style="overflow-x:auto;"><table class="admin-table"><thead><tr><th>ID</th><th>Item</th><th>Category</th><th>Color</th><th>Location</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead><tbody id="foundTableBody"><tr><td colspan="8" style="text-align:center;padding:32px;color:var(--text-4);">Loading…</td></tr></tbody></table></div>
+      </div>
+
+      <!-- Claims -->
+      <div class="tab-panel" id="tab-claims">
+        <div class="admin-page-header"><div><div class="admin-page-title">Claim Requests</div><div class="admin-page-sub">Students claiming found items</div></div></div>
+        <div style="overflow-x:auto;"><table class="admin-table"><thead><tr><th>ID</th><th>Found Item</th><th>Claimant ID</th><th>Reason</th><th>Status</th></tr></thead><tbody id="claimsTableBody"><tr><td colspan="5" style="text-align:center;padding:32px;color:var(--text-4);">Loading…</td></tr></tbody></table></div>
+      </div>
+
+      <!-- AI Matches -->
+      <div class="tab-panel" id="tab-matches">
+        <div class="admin-page-header">
+          <div><div class="admin-page-title">AI Matches</div><div class="admin-page-sub">Generated matches between items</div></div>
+          <button class="btn-uni-primary btn btn-sm px-4" onclick="generateAndReload()" style="display:inline-flex;align-items:center;gap:6px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            Generate New Matches
+          </button>
+        </div>
+        <div style="overflow-x:auto;"><table class="admin-table"><thead><tr><th>ID</th><th>Lost</th><th>Found</th><th>Image</th><th>Cat</th><th>Text</th><th>Loc</th><th>Score</th><th>Confidence</th><th>Status</th><th>Reasons</th></tr></thead><tbody id="matchesTableBody"><tr><td colspan="11" style="text-align:center;padding:32px;color:var(--text-4);">Click AI Matches in the sidebar to load.</td></tr></tbody></table></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/common.js"></script><script src="js/admin.js"></script>
+</body></html>

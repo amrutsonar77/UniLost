@@ -1,0 +1,1046 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UniLost — Campus Lost & Found Platform</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    /* ═══════════════════════════════════════════════════════
+       HOMEPAGE — Stripe-inspired
+       White Lilac · Dark Blue · Color Gradient
+    ═══════════════════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    :root {
+      --bg:        #F8F8F9;
+      --bg-1:      #FFFFFF;
+      --bg-2:      #F0F0F4;
+      --bg-3:      #E8E8F0;
+      --navy:      #111439;
+      --navy-h:    #1a1d52;
+      --text:      #111439;
+      --text-2:    #2d3158;
+      --gray-1:    #6b7280;
+      --gray-2:    #9ca3af;
+      --border:    rgba(17,20,57,0.08);
+      --border-2:  rgba(17,20,57,0.14);
+      /* Gradient tokens */
+      --grad:      linear-gradient(135deg, #a78bfa 0%, #38bdf8 40%, #fbbf24 80%, #fb7185 100%);
+      --grad-soft: linear-gradient(135deg, rgba(167,139,250,0.15) 0%, rgba(56,189,248,0.15) 50%, rgba(251,191,36,0.10) 100%);
+      --accent:    #7c3aed;
+      --accent-dim:rgba(124,58,237,0.08);
+      --accent-bdr:rgba(124,58,237,0.20);
+      --font: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    a { text-decoration: none; color: var(--navy); transition: color .2s; }
+    a:hover { color: var(--navy-h); }
+    img { display: block; max-width: 100%; }
+
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 99px; }
+
+    /* ── NAVBAR ────────────────────────────────────────── */
+    .nav-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(248,248,249,0.90);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+    .nav-logo-mark {
+      width: 30px; height: 30px;
+      background: var(--grad);
+      border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(167,139,250,0.35);
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--gray-1);
+      font-size: 0.85rem;
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: all .15s;
+      text-decoration: none;
+    }
+    .nav-links a:hover { color: var(--text); background: var(--bg-2); }
+    .nav-links a.active { color: var(--text); background: var(--bg-2); font-weight: 600; }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .nav-bell { color: var(--gray-1); font-size: 1rem; cursor: pointer; padding: 6px; border-radius: 6px; transition: all .15s; position: relative; }
+    .nav-bell:hover { color: var(--text); background: var(--bg-2); }
+    .bell-dot { position: absolute; top: 4px; right: 4px; width: 7px; height: 7px; background: var(--accent); border-radius: 50%; border: 2px solid var(--bg); }
+
+    .nav-avatar {
+      width: 30px; height: 30px;
+      background: var(--grad);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.78rem; font-weight: 800; color: #fff;
+      cursor: pointer; flex-shrink: 0;
+    }
+    .btn-nav-signin {
+      background: transparent;
+      border: 1px solid var(--border-2);
+      color: var(--text);
+      font-size: 0.82rem; font-weight: 600;
+      padding: 7px 16px; border-radius: 6px;
+      cursor: pointer; transition: all .15s; text-decoration: none;
+      display: inline-block;
+    }
+    .btn-nav-signin:hover { border-color: var(--navy); color: var(--text); background: var(--bg-2); }
+    .btn-nav-signup {
+      background: var(--navy);
+      border: none;
+      color: #fff;
+      font-size: 0.82rem; font-weight: 700;
+      padding: 7px 16px; border-radius: 6px;
+      cursor: pointer; transition: all .15s; text-decoration: none;
+      display: inline-block;
+    }
+    .btn-nav-signup:hover { background: var(--navy-h); color: #fff; }
+
+    @media(max-width:768px){ .nav-links { display: none; } }
+
+    /* notification dropdown */
+    .notif-dd {
+      position: absolute; right: -8px; top: calc(100% + 8px);
+      width: 320px; max-height: 400px; overflow-y: auto;
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      box-shadow: 0 16px 48px rgba(17,20,57,0.14);
+      z-index: 2000;
+    }
+    .notif-dd-header { padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: .82rem; font-weight: 700; color: var(--text); }
+    .notif-item { padding: 11px 16px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background .1s; }
+    .notif-item:last-child { border-bottom: none; }
+    .notif-item:hover { background: var(--bg-2); }
+    .notif-unread { background: var(--accent-dim); }
+    .notif-title { font-weight: 700; font-size: .8rem; color: var(--text); }
+    .notif-msg   { font-size: .74rem; color: var(--gray-1); margin-top: 2px; }
+    .notif-time  { font-size: .68rem; color: var(--gray-2); margin-top: 2px; }
+    .notif-empty { padding: 24px; text-align: center; color: var(--gray-1); font-size: .85rem; }
+    .bell-count  { background: var(--accent); color: #fff; font-size: 9px; font-weight: 800; border-radius: 99px; padding: 1px 5px; position: relative; top: -6px; min-width: 16px; display: inline-block; text-align: center; }
+
+    /* ── HERO ──────────────────────────────────────────── */
+    .hero-outer {
+      position: relative;
+      overflow: visible;
+      background: var(--bg-1);
+    }
+
+    .hero {
+      max-width: none;
+      margin: 0;
+      padding: 100px 24px 120px;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      background:
+        linear-gradient(rgba(10, 12, 40, 0.70), rgba(10, 12, 40, 0.55)),
+        url('unilost_hero_parul_university.png') center/cover no-repeat;
+      border-radius: 0px;
+      overflow: hidden;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 5px 14px;
+      border-radius: 99px;
+      margin-bottom: 28px;
+      letter-spacing: 0.2px;
+      backdrop-filter: blur(8px);
+    }
+    .eyebrow-dot {
+      width: 6px; height: 6px;
+      background: #a78bfa;
+      border-radius: 50%;
+      animation: pulse-g 2s infinite;
+    }
+    @keyframes pulse-g { 0%,100%{opacity:1;} 50%{opacity:.3;} }
+
+    .hero h1 {
+      font-size: clamp(2.8rem, 5.5vw, 4.8rem);
+      font-weight: 900;
+      line-height: 1.06;
+      letter-spacing: -2.5px;
+      color: #ffffff;
+      margin-bottom: 20px;
+    }
+    /* Gradient text on the accent word */
+    .hero h1 em {
+      font-style: normal;
+      background: var(--grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.78);
+      max-width: 540px;
+      margin: 0 auto 40px;
+      line-height: 1.75;
+      font-weight: 400;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 56px;
+    }
+
+    /* ── HERO BUTTONS ──────────────────────────────────── */
+    .btn-hero-green,
+    .btn-hero-outline {
+      position: relative;
+      overflow: hidden;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      font-family: var(--font);
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: .01em;
+      border-radius: 9999px;
+      cursor: pointer;
+      text-decoration: none;
+      white-space: nowrap;
+      transition:
+        background   .22s cubic-bezier(.4,0,.2,1),
+        border-color .22s cubic-bezier(.4,0,.2,1),
+        box-shadow   .22s cubic-bezier(.4,0,.2,1),
+        transform    .18s cubic-bezier(.34,1.56,.64,1);
+    }
+
+    /* PRIMARY hero button — solid white on dark bg */
+    .btn-hero-green {
+      background: #ffffff;
+      color: var(--navy);
+      padding: 14px 34px;
+      border: none;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.22), 0 1px 4px rgba(0,0,0,0.12);
+    }
+    .btn-hero-green:hover {
+      background: #f4f4ff;
+      color: var(--navy);
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 10px 36px rgba(0,0,0,0.28);
+    }
+    .btn-hero-green:active { transform: translateY(0) scale(0.98); }
+
+    /* SECONDARY hero button — glass outline */
+    .btn-hero-outline {
+      background: rgba(255,255,255,0.10);
+      color: #fff;
+      padding: 13px 30px;
+      border: 1.5px solid rgba(255,255,255,0.38);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    .btn-hero-outline:hover {
+      background: rgba(255,255,255,0.20);
+      color: #fff;
+      border-color: rgba(255,255,255,0.65);
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 8px 28px rgba(0,0,0,0.18);
+    }
+    .btn-hero-outline:active { transform: translateY(0) scale(0.98); }
+
+    /* ── HERO IMAGE — removed; using background image instead ── */
+    /* ── DASHBOARD MOCKUP ──────────────────────────────── */
+    .mockup-outer {
+      background: var(--bg-1);
+      padding: 0 24px 56px;
+      margin-top: -60px;
+      position: relative;
+      z-index: 5;
+    }
+    .mockup-wrap {
+      position: relative;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .mockup-wrap::before {
+      content: '';
+      position: absolute;
+      bottom: -30px; left: 50%;
+      transform: translateX(-50%);
+      width: 70%; height: 60px;
+      background: linear-gradient(135deg, rgba(167,139,250,0.18), rgba(56,189,248,0.12));
+      border-radius: 50%;
+      filter: blur(24px);
+      pointer-events: none;
+    }
+
+    .mockup-frame {
+      background: var(--bg-1);
+      border: 1px solid var(--border-2);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow:
+        0 0 0 1px rgba(167,139,250,0.12),
+        0 40px 100px rgba(17,20,57,0.22),
+        0 12px 32px rgba(17,20,57,0.10);
+      position: relative;
+    }
+
+    /* Browser chrome bar */
+    .mockup-chrome {
+      background: var(--bg-2);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .chrome-dots { display: flex; gap: 5px; }
+    .chrome-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .chrome-url {
+      flex: 1;
+      background: var(--bg-3);
+      border-radius: 5px;
+      padding: 5px 12px;
+      font-size: 0.72rem;
+      color: var(--gray-1);
+      text-align: center;
+      max-width: 260px;
+      margin: 0 auto;
+    }
+
+    /* Mockup content */
+    .mockup-content {
+      padding: 24px;
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 16px;
+      min-height: 380px;
+    }
+    @media(max-width:600px) { .mockup-content { grid-template-columns: 1fr; } }
+
+    .mock-sidebar {
+      background: var(--bg-2);
+      border-radius: 10px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .mock-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--gray-1);
+      cursor: pointer;
+    }
+    .mock-nav-item.active {
+      background: var(--accent-dim);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .mock-main { display: flex; flex-direction: column; gap: 14px; }
+
+    .mock-topbar {
+      background: var(--bg-2);
+      border-radius: 8px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .mock-search {
+      flex: 1;
+      background: var(--bg-1);
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 0.72rem;
+      color: var(--gray-1);
+      border: 1px solid var(--border);
+    }
+    .mock-badge {
+      background: var(--navy);
+      color: #fff;
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+
+    .mock-stats {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 10px;
+    }
+    .mock-stat {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+    }
+    .mock-stat .n { font-size: 1.4rem; font-weight: 900; color: var(--navy); letter-spacing: -1px; }
+    .mock-stat .l { font-size: 0.65rem; color: var(--gray-1); margin-top: 2px; text-transform: uppercase; letter-spacing: .6px; }
+
+    .mock-card {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+    }
+    .mock-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .mock-card-title { font-size: 0.75rem; font-weight: 700; color: var(--text); }
+
+    .mock-item-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .mock-item-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .mock-img { width: 32px; height: 32px; background: var(--bg-3); border-radius: 6px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: .9rem; flex-shrink: 0; }
+    .mock-item-name { font-size: 0.73rem; font-weight: 600; color: var(--text); }
+    .mock-item-sub  { font-size: 0.65rem; color: var(--gray-1); }
+    .mock-pill {
+      font-size: 0.62rem; font-weight: 700; padding: 2px 8px; border-radius: 99px; margin-left: auto; flex-shrink: 0;
+    }
+    .mock-pill-green  { background: rgba(5,150,105,.1);  color: #059669; border: 1px solid rgba(5,150,105,.2); }
+    .mock-pill-yellow { background: rgba(217,119,6,.1);  color: #d97706; border: 1px solid rgba(217,119,6,.2); }
+    .mock-pill-gray   { background: var(--bg-3); color: var(--gray-1); border: 1px solid var(--border); }
+
+    .mock-match-bar { margin-top: 6px; }
+    .mock-bar-track { height: 4px; background: var(--bg-3); border-radius: 99px; }
+    .mock-bar-fill  { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #a78bfa, #38bdf8); }
+
+    /* ── STATS STRIP ───────────────────────────────────── */
+    .stats-strip {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-1);
+      margin-top: 0;
+    }
+    .stat-cell {
+      text-align: center;
+      padding: 36px 16px;
+      border-right: 1px solid var(--border);
+    }
+    .stat-cell:last-child { border-right: none; }
+    .stat-cell .n {
+      font-size: 2.8rem; font-weight: 900; letter-spacing: -2px; line-height: 1;
+      background: var(--grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .stat-cell .l {
+      font-size: 0.72rem; font-weight: 600; color: var(--gray-1);
+      text-transform: uppercase; letter-spacing: 1px; margin-top: 6px;
+    }
+
+    /* ── SEARCH SECTION ────────────────────────────────── */
+    .search-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 64px 24px 0;
+    }
+    .search-card {
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    /* gradient accent top border */
+    .search-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 3px;
+      background: var(--grad);
+      pointer-events: none;
+    }
+    .search-card::after {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 250px; height: 250px;
+      background: radial-gradient(circle, rgba(167,139,250,0.08), transparent);
+      pointer-events: none;
+    }
+    .search-input-wrap {
+      display: flex;
+      gap: 10px;
+    }
+    .search-input {
+      flex: 1;
+      background: var(--bg);
+      border: 1px solid var(--border-2);
+      color: var(--text);
+      border-radius: 8px;
+      padding: 13px 18px;
+      font-size: 0.9rem;
+      font-family: var(--font);
+      outline: none;
+      transition: border-color .2s;
+    }
+    .search-input::placeholder { color: var(--gray-2); }
+    .search-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(124,58,237,.08); }
+
+    /* ── SECTION LABEL ─────────────────────────────────── */
+    .section-label {
+      display: block;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    /* ── RECENT ITEMS ──────────────────────────────────── */
+    .recent-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 64px 24px;
+    }
+    .item-card {
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all .25s;
+      height: 100%;
+    }
+    .item-card:hover {
+      border-color: var(--border-2);
+      box-shadow: 0 8px 32px rgba(17,20,57,0.10), 0 2px 8px rgba(17,20,57,0.06);
+      transform: translateY(-3px);
+    }
+    .item-card-img-wrap { overflow: hidden; position: relative; }
+    .item-card img {
+      width: 100%; height: 190px; object-fit: cover;
+      background: var(--bg-2); display: block;
+      transition: transform .4s;
+    }
+    .item-card:hover img { transform: scale(1.04); }
+    .item-img-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(17,20,57,0.55) 0%, transparent 55%);
+    }
+    .item-card-body { padding: 16px 18px; }
+    .item-card-footer { padding: 0 18px 16px; }
+
+    .kind-tag {
+      font-size: 0.62rem; font-weight: 800;
+      padding: 3px 10px; border-radius: 99px;
+      text-transform: uppercase; letter-spacing: .4px;
+    }
+    .kind-lost  { background: rgba(220,38,38,0.08); border: 1px solid rgba(220,38,38,0.18); color: #dc2626; }
+    .kind-found { background: rgba(5,150,105,0.08); border: 1px solid rgba(5,150,105,0.18); color: #059669; }
+
+    .item-tag {
+      font-size: 0.65rem; font-weight: 600;
+      padding: 2px 9px; border-radius: 99px;
+      background: var(--accent-dim); border: 1px solid var(--accent-bdr); color: var(--accent);
+    }
+    .item-tag-gray {
+      background: var(--bg-2); border: 1px solid var(--border); color: var(--gray-1);
+    }
+
+    .btn-view {
+      display: block; width: 100%;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 0.82rem; font-weight: 600;
+      padding: 9px; border-radius: 6px;
+      text-align: center; text-decoration: none;
+      transition: all .2s;
+    }
+    .btn-view:hover { background: var(--navy); color: #fff; border-color: var(--navy); }
+
+    /* ── HOW IT WORKS ──────────────────────────────────── */
+    .hiw-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+    .hiw-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(167,139,250,0.3), rgba(56,189,248,0.2), transparent);
+      border: none; margin: 0 0 64px;
+    }
+    .hiw-card {
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px 24px;
+      position: relative;
+      overflow: hidden;
+      transition: all .25s;
+      height: 100%;
+    }
+    .hiw-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px; background: var(--grad);
+      transform: scaleX(0); transform-origin: left;
+      transition: transform .3s;
+    }
+    .hiw-card:hover { border-color: var(--border-2); box-shadow: 0 8px 32px rgba(17,20,57,0.08); transform: translateY(-3px); }
+    .hiw-card:hover::after { transform: scaleX(1); }
+    .hiw-num {
+      width: 32px; height: 32px;
+      background: var(--accent-dim);
+      border: 1px solid var(--accent-bdr);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.82rem; font-weight: 800; color: var(--accent);
+      margin-bottom: 16px;
+    }
+    .hiw-icon {
+      width: 48px; height: 48px;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem; margin-bottom: 16px;
+    }
+    .hiw-card h6 { font-size: 1rem; font-weight: 800; color: var(--text); margin-bottom: 10px; }
+    .hiw-card p  { font-size: 0.85rem; color: var(--gray-1); line-height: 1.65; margin: 0; }
+
+    /* ── FOOTER ────────────────────────────────────────── */
+    .hp-footer {
+      background: var(--bg-1);
+      border-top: 1px solid var(--border);
+      text-align: center;
+      padding: 28px 16px;
+      font-size: 0.82rem;
+      color: var(--gray-2);
+    }
+    .hp-footer a { color: var(--gray-1); }
+    .hp-footer a:hover { color: var(--navy); }
+
+    /* ── SPINNER ───────────────────────────────────────── */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner {
+      width: 34px; height: 34px;
+      border: 3px solid var(--bg-3);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      margin: 0 auto 12px;
+    }
+
+    /* toast */
+    .toast-wrap { position: fixed; bottom: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; }
+    .hp-toast {
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 8px;
+      box-shadow: 0 16px 40px rgba(17,20,57,0.14);
+      padding: 12px 16px;
+      min-width: 260px; max-width: 340px;
+      font-size: 0.875rem; font-weight: 500; color: var(--text);
+      animation: slideIn .25s ease;
+    }
+    .hp-toast.error   { border-left-color: #dc2626; }
+    .hp-toast.warning { border-left-color: #d97706; }
+    @keyframes slideIn { from{transform:translateX(110%);opacity:0;} to{transform:translateX(0);opacity:1;} }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════════════
+       NAVBAR (inline — no common.js dependency for nav)
+  ════════════════════════════════════════════════════ -->
+  <div id="navbarPlaceholder"></div>
+  <script>window.ACTIVE_NAV = "home";</script>
+  <!-- common.js will replace navbarPlaceholder. We inject our own styles via the navbar-unilost classes. -->
+
+  <!-- ═══════════════════════════════════════════════════
+       HERO
+  ════════════════════════════════════════════════════ -->
+  <div class="hero-outer">
+  <div class="hero">
+    <div class="hero-eyebrow">
+      <span class="eyebrow-dot"></span>
+      AI-Powered Campus Lost &amp; Found Platform
+    </div>
+
+    <h1>
+      Never lose anything<br>on campus <em>again.</em>
+    </h1>
+
+    <p class="hero-sub">
+      UniLost uses AI-powered image matching and smart text analysis to connect
+      students with their lost belongings — faster than ever.
+    </p>
+
+    <div class="hero-btns">
+      <a href="report-lost.html" class="btn-hero-green">
+        📢 Report Lost Item
+      </a>
+      <a href="lost-items.html" class="btn-hero-outline">
+        Browse Items →
+      </a>
+    </div>
+
+  </div>
+  </div><!-- /.hero-outer -->
+
+  <!-- ═══════════════════════════════════════════════════
+       DASHBOARD MOCKUP (floats below hero)
+  ════════════════════════════════════════════════════ -->
+  <div class="mockup-outer">
+    <!-- Dashboard Mockup -->
+    <div class="mockup-wrap">
+      <div class="mockup-frame">
+        <!-- Browser chrome -->
+        <div class="mockup-chrome">
+          <div class="chrome-dots">
+            <div class="chrome-dot" style="background:#ef4444;"></div>
+            <div class="chrome-dot" style="background:#f59e0b;"></div>
+            <div class="chrome-dot" style="background:#10b981;"></div>
+          </div>
+          <div class="chrome-url">localhost:8080 — UniLost Dashboard</div>
+        </div>
+
+        <!-- App UI mockup -->
+        <div class="mockup-content">
+          <!-- Sidebar -->
+          <div class="mock-sidebar">
+            <div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gray-2);padding:4px 10px 10px;">Navigation</div>
+            <div class="mock-nav-item active">📊 Dashboard</div>
+            <div class="mock-nav-item">📋 Lost Items</div>
+            <div class="mock-nav-item">✅ Found Items</div>
+            <div class="mock-nav-item">🤖 AI Matches</div>
+            <div class="mock-nav-item">💬 Messages</div>
+            <div class="mock-nav-item">🗂 My Reports</div>
+            <div style="margin-top:auto;padding-top:16px;border-top:1px solid var(--border);margin-top:16px;">
+              <div class="mock-nav-item">
+                <div style="width:22px;height:22px;background:var(--grad);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:800;color:#fff;">U</div>
+                User
+              </div>
+            </div>
+          </div>
+
+          <!-- Main area -->
+          <div class="mock-main">
+            <!-- Top bar -->
+            <div class="mock-topbar">
+              <div class="mock-search">🔍 &nbsp; Search items...</div>
+              <div class="mock-badge">🤖 AI Active</div>
+            </div>
+
+            <!-- Stats row -->
+            <div class="mock-stats">
+              <div class="mock-stat">
+                <div class="n">12</div>
+                <div class="l">Lost Items</div>
+              </div>
+              <div class="mock-stat">
+                <div class="n">8</div>
+                <div class="l">Found Items</div>
+              </div>
+              <div class="mock-stat">
+                <div class="n" style="color:#d97706;">3</div>
+                <div class="l">Pending Claims</div>
+              </div>
+            </div>
+
+            <!-- Recent reports card -->
+            <div class="mock-card">
+              <div class="mock-card-header">
+                <span class="mock-card-title">Recent Reports</span>
+                <div style="width:50px;height:4px;background:linear-gradient(90deg,#a78bfa,#38bdf8);border-radius:99px;"></div>
+              </div>
+
+              <div class="mock-item-row">
+                <div class="mock-img">🎧</div>
+                <div>
+                  <div class="mock-item-name">Black Boat Earphones</div>
+                  <div class="mock-item-sub">Library, 2nd Floor · Today</div>
+                </div>
+                <div class="mock-pill mock-pill-yellow">PENDING</div>
+              </div>
+              <div class="mock-item-row">
+                <div class="mock-img">🎒</div>
+                <div>
+                  <div class="mock-item-name">Blue Laptop Bag</div>
+                  <div class="mock-item-sub">Canteen · Yesterday</div>
+                </div>
+                <div class="mock-pill mock-pill-green">MATCHED 87%</div>
+              </div>
+              <div class="mock-item-row">
+                <div class="mock-img">🪪</div>
+                <div>
+                  <div class="mock-item-name">Student ID Card</div>
+                  <div class="mock-item-sub">Gate 2 · 2 days ago</div>
+                </div>
+                <div class="mock-pill mock-pill-green">RECOVERED</div>
+              </div>
+
+              <!-- Match score bar -->
+              <div class="mock-match-bar">
+                <div style="display:flex;justify-content:space-between;font-size:.65rem;color:var(--gray-2);margin-bottom:4px;">
+                  <span>AI Match Score — Blue Laptop Bag</span><span>87%</span>
+                </div>
+                <div class="mock-bar-track"><div class="mock-bar-fill" style="width:87%"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- gradient separator -->
+  <div style="height:1px;background:linear-gradient(90deg,transparent,rgba(167,139,250,0.2),rgba(56,189,248,0.15),transparent);"></div>
+
+  <!-- ═══════════════════════════════════════════════════
+       STATS STRIP
+  ════════════════════════════════════════════════════ -->
+  <div class="stats-strip">
+    <div class="container-fluid px-0">
+      <div class="row g-0">
+        <div class="col-6 col-md-3">
+          <div class="stat-cell"><div class="n" id="statLost">—</div><div class="l">Lost Items</div></div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-cell"><div class="n" id="statFound">—</div><div class="l">Found Items</div></div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-cell"><div class="n" id="statRecovered">—</div><div class="l">Recovered</div></div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-cell"><div class="n" id="statMatches">—</div><div class="l">AI Matches</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════
+       SEARCH
+  ════════════════════════════════════════════════════ -->
+  <div class="search-section">
+    <div class="search-card">
+      <div class="row align-items-center g-4" style="position:relative;z-index:1;">
+        <div class="col-md-5">
+          <span class="section-label">Quick Search</span>
+          <h3 style="font-size:1.5rem;font-weight:900;letter-spacing:-0.5px;margin-bottom:8px;color:var(--text);">Find your item instantly</h3>
+          <p style="color:var(--gray-1);font-size:.875rem;margin:0;line-height:1.6;">Search across all lost and found reports on campus in real time.</p>
+        </div>
+        <div class="col-md-7">
+          <div class="search-input-wrap">
+            <input type="text" id="quickSearchInput" class="search-input"
+                   placeholder="e.g. Black wallet, ID card, water bottle…"
+                   onkeydown="if(event.key==='Enter') quickSearch()">
+            <button onclick="quickSearch()" style="
+              display:inline-flex;align-items:center;gap:7px;
+              position:relative;overflow:hidden;
+              background:linear-gradient(135deg,#1a1d52,#111439);
+              color:#fff;font-weight:700;font-size:.9rem;
+              padding:13px 26px;border-radius:9999px;border:none;
+              cursor:pointer;white-space:nowrap;font-family:var(--font);
+              box-shadow:0 3px 12px rgba(17,20,57,0.25);
+              transition:transform .18s cubic-bezier(.34,1.56,.64,1),box-shadow .22s;">
+              Search
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════
+       RECENTLY REPORTED
+  ════════════════════════════════════════════════════ -->
+  <div class="recent-section">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px;margin-bottom:28px;">
+      <div>
+        <span class="section-label">Latest Activity</span>
+        <h2 style="font-size:1.6rem;font-weight:900;letter-spacing:-0.5px;margin:0;color:var(--text);">Recently Reported</h2>
+        <p style="color:var(--gray-1);font-size:.875rem;margin:5px 0 0;">Latest lost and found items on campus</p>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <a href="lost-items.html" style="background:var(--bg-2);border:1px solid var(--border);color:var(--gray-1);font-size:.82rem;font-weight:600;padding:8px 18px;border-radius:6px;text-decoration:none;transition:all .2s;">Lost Items</a>
+        <a href="found-items.html" style="background:var(--accent-dim);border:1px solid var(--accent-bdr);color:var(--accent);font-size:.82rem;font-weight:600;padding:8px 18px;border-radius:6px;text-decoration:none;transition:all .2s;">Found Items</a>
+      </div>
+    </div>
+
+    <div class="row g-4" id="recentItemsContainer">
+      <div class="col-12" style="text-align:center;padding:48px;">
+        <div class="spinner"></div>
+        <p style="color:var(--gray-2);font-size:.85rem;">Loading…</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════
+       HOW IT WORKS
+  ════════════════════════════════════════════════════ -->
+  <div class="hiw-section">
+    <hr class="hiw-divider">
+    <div style="text-align:center;margin-bottom:48px;">
+      <span class="section-label">Simple Process</span>
+      <h2 style="font-size:2rem;font-weight:900;letter-spacing:-0.5px;color:var(--text);margin-bottom:10px;">How UniLost Works</h2>
+      <p style="color:var(--gray-1);max-width:420px;margin:0 auto;font-size:.9rem;line-height:1.65;">Three steps to recover your lost belongings</p>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="hiw-card">
+          <div class="hiw-num">01</div>
+          <div class="hiw-icon">📢</div>
+          <h6>Report Your Item</h6>
+          <p>Submit a detailed report with photos, description, location and date. Takes under 2 minutes. More detail means better AI matching.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="hiw-card">
+          <div class="hiw-num">02</div>
+          <div class="hiw-icon">🤖</div>
+          <h6>AI Matching Engine</h6>
+          <p>Our pHash image similarity + Jaccard text algorithm automatically compares your item against all campus reports and ranks the best matches.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="hiw-card">
+          <div class="hiw-num">03</div>
+          <div class="hiw-icon">✅</div>
+          <h6>Reunite &amp; Recover</h6>
+          <p>Message the finder directly, submit a claim, and get your item back — all inside UniLost. No external apps or phone calls needed.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════
+       FOOTER
+  ════════════════════════════════════════════════════ -->
+  <div class="hp-footer">
+    UniLost &copy; 2026 &nbsp;·&nbsp; Campus Lost &amp; Found Platform
+    &nbsp;·&nbsp; <a href="admin-login.html">Admin Portal</a>
+  </div>
+
+  <!-- Toast container -->
+  <div class="toast-wrap" id="toastContainerUni"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Navbar theme override — light/Stripe -->
+  <style>
+    /* ── Navbar — matches all other pages (light theme) ── */
+    .navbar-unilost {
+      background: rgba(248,248,249,0.92) !important;
+      backdrop-filter: blur(16px) !important;
+      -webkit-backdrop-filter: blur(16px) !important;
+      border-bottom: 1px solid rgba(17,20,57,0.08) !important;
+    }
+    .navbar-unilost .navbar-brand { color: #111439 !important; }
+    .navbar-unilost .nav-link { color: #6b7280 !important; }
+    .navbar-unilost .nav-link:hover,
+    .navbar-unilost .nav-link.active { color: #111439 !important; background: #F0F0F4 !important; }
+    .btn-nav-cta { background: #111439 !important; color: #fff !important; padding: .5rem 1.4rem !important; border-radius: 9999px !important; font-weight: 700 !important; box-shadow: 0 2px 12px rgba(17,20,57,0.18) !important; }
+    .btn-nav-cta:hover { background: #1a1d52 !important; color: #fff !important; }
+  </style>
+
+  <script src="js/common.js"></script>
+  <script src="js/home.js"></script>
+  <script>
+    // Override showToast for homepage (uses its own styles)
+    function hpToast(msg, type) {
+      const c = document.getElementById("toastContainerUni");
+      if (!c) return;
+      const t = document.createElement("div");
+      t.className = `hp-toast ${type||""}`;
+      t.textContent = msg;
+      c.appendChild(t);
+      setTimeout(()=>{ t.style.opacity="0"; t.style.transition="opacity .3s"; setTimeout(()=>t.remove(),300); }, 3200);
+    }
+
+    function quickSearch() {
+      const kw = document.getElementById("quickSearchInput").value.trim();
+      if (!kw) { hpToast("Please enter a search term.","warning"); return; }
+      window.location.href = "lost-items.html?search=" + encodeURIComponent(kw);
+    }
+
+    // Override renderRecentItems to use homepage card style
+    window.addEventListener("load", () => {
+      // home.js will call renderRecentItems which uses escHtml from common.js
+    });
+  </script>
+</body>
+</html>

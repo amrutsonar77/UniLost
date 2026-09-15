@@ -1,0 +1,7 @@
+target/
+uploads/*
+!uploads/.gitkeep
+*.class
+.idea/
+*.iml
+.DS_Store

@@ -1,0 +1,2 @@
+/* UniLost — Shared brand SVG */
+const BRAND_SVG = `<svg width="19" height="19" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="8.5" cy="8.5" r="5.5" stroke="#0d1117" stroke-width="2"/><circle cx="8.5" cy="7.5" r="1.6" fill="#0d1117"/><path d="M8.5 9.1 C7.2 10.8 8.5 12.5 8.5 12.5 C8.5 12.5 9.8 10.8 8.5 9.1Z" fill="#0d1117"/><line x1="13" y1="13" x2="18.5" y2="18.5" stroke="#0d1117" stroke-width="2.2" stroke-linecap="round"/></svg>`;

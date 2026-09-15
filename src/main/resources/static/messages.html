@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UniLost — Messages</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+  <div id="navbarPlaceholder"></div>
+  <script>window.ACTIVE_NAV="messages";</script>
+
+  <div class="page-hero hero-illustrated">
+    <div class="container">
+      <div class="hi-inner">
+        <div class="hi-copy">
+          <span class="section-label">Direct Messaging</span>
+          <h1>
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Messages
+          </h1>
+          <p>Chat securely with finders or owners to coordinate item return.</p>
+        </div>
+        <div class="hi-visual">
+          <!-- Messages illustration — two people chatting -->
+          <svg viewBox="0 0 280 220" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:220px;">
+            <!-- bg blob -->
+            <ellipse cx="178" cy="122" rx="105" ry="88" fill="rgba(124,58,237,0.07)"/>
+            <!-- chat bubbles -->
+            <rect x="120" y="38" width="130" height="36" rx="14" fill="#7C3AED"/>
+            <path d="M135 74 L128 86 L148 74Z" fill="#7C3AED"/>
+            <text x="132" y="62" font-size="11" fill="white" font-family="Inter,sans-serif">Hi! I found your wallet.</text>
+            <text x="132" y="76" font-size="11" fill="white" font-family="Inter,sans-serif" opacity=".85">Is this yours?</text>
+            <rect x="30" y="98" width="120" height="32" rx="14" fill="#F3F4F6"/>
+            <path d="M130 98 L138 86 L115 98Z" fill="#F3F4F6"/>
+            <text x="42" y="118" font-size="11" fill="#374151" font-family="Inter,sans-serif">Yes! Thank you so much!</text>
+            <!-- time stamps -->
+            <text x="218" y="90" font-size="9" fill="#9CA3AF" font-family="Inter,sans-serif">10:24 AM</text>
+            <text x="32" y="142" font-size="9" fill="#9CA3AF" font-family="Inter,sans-serif">10:26 AM</text>
+            <!-- typing dots -->
+            <rect x="120" y="148" width="60" height="26" rx="13" fill="#F3F4F6"/>
+            <circle cx="137" cy="161" r="4" fill="#9CA3AF"/>
+            <circle cx="150" cy="161" r="4" fill="#9CA3AF"/>
+            <circle cx="163" cy="161" r="4" fill="#9CA3AF"/>
+            <!-- person 1 (left) -->
+            <circle cx="72" cy="185" r="22" fill="#F59E0B"/>
+            <circle cx="65" cy="181" r="3" fill="#1F2937"/>
+            <circle cx="79" cy="181" r="3" fill="#1F2937"/>
+            <path d="M66 191 Q72 197 78 191" stroke="#1F2937" stroke-width="2" stroke-linecap="round" fill="none"/>
+            <path d="M50 172 Q52 162 72 160 Q92 162 94 172" fill="#1F2937"/>
+            <rect x="50" y="203" width="44" height="18" rx="9" fill="#7C3AED"/>
+            <!-- person 2 (right, partially) -->
+            <circle cx="216" cy="195" r="20" fill="#FBBF24"/>
+            <circle cx="209" cy="191" r="3" fill="#1F2937"/>
+            <circle cx="223" cy="191" r="3" fill="#1F2937"/>
+            <path d="M196 183 Q198 173 216 171 Q234 173 236 183" fill="#374151"/>
+            <rect x="198" y="210" width="36" height="14" rx="7" fill="#059669"/>
+            <!-- phone in hand -->
+            <rect x="88" y="168" width="24" height="40" rx="5" fill="#1F2937"/>
+            <rect x="91" y="172" width="18" height="32" rx="3" fill="#374151"/>
+            <!-- sparkles -->
+            <text x="38" y="68" font-size="14" fill="#A78BFA" opacity=".7">✦</text>
+            <text x="258" y="120" font-size="12" fill="#60A5FA" opacity=".8">✦</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container page-wrapper" style="padding-top:28px;">
+
+    <div class="chat-shell">
+      <div class="conv-list" id="convListPanel">
+        <div class="conv-list-header">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Conversations
+        </div>
+        <div id="convList">
+          <div style="padding:24px;text-align:center;"><div class="spinner-uni"></div></div>
+        </div>
+      </div>
+      <div class="chat-area" id="chatArea">
+        <div class="chat-welcome" id="chatWelcome">
+          <div style="width:64px;height:64px;background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r-lg);display:flex;align-items:center;justify-content:center;margin-bottom:16px;">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--text-4)" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <h6 style="font-weight:700;color:var(--text-2);margin-bottom:6px;">Select a conversation</h6>
+          <p style="font-size:.82rem;max-width:260px;line-height:1.65;color:var(--text-3);">Or go to an item's details page and click "Contact" to start one.</p>
+        </div>
+        <div class="chat-header d-none" id="chatHeader"></div>
+        <div class="chat-messages d-none" id="chatMessages"></div>
+        <div class="chat-input-row d-none" id="chatInputRow">
+          <input type="text" id="chatInput" class="form-control" placeholder="Type a message…" maxlength="2000">
+          <button class="btn-uni-primary btn px-4" onclick="sendChatMessage()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            Send
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>UniLost &copy; 2026 &nbsp;·&nbsp; Campus Lost &amp; Found</footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/common.js"></script><script src="js/messages.js"></script>
+</body></html>

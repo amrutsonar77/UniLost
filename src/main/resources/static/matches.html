@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UniLost — AI Matches</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+  <div id="navbarPlaceholder"></div>
+  <script>window.ACTIVE_NAV="matches";</script>
+
+  <div class="page-hero hero-illustrated">
+    <div class="container">
+      <div class="hi-inner">
+        <div class="hi-copy">
+          <span class="section-label">pHash + Jaccard AI Engine</span>
+          <h1>
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>
+            AI Match Suggestions
+          </h1>
+          <p id="matchInfoText">Comparing images, descriptions, categories &amp; locations to find potential matches.</p>
+          <div class="hi-actions" style="margin-bottom:16px;">
+            <span class="confidence-badge conf-veryhigh">Very High &ge;90%</span>
+            <span class="confidence-badge conf-high">High &ge;75%</span>
+            <span class="confidence-badge conf-possible">Possible &ge;55%</span>
+            <span class="confidence-badge conf-low">Low &lt;55%</span>
+          </div>
+          <div class="hi-actions">
+            <button class="btn-uni-primary btn px-4 py-2" onclick="generateAllMatches()" id="generateBtn">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              Generate Matches
+            </button>
+          </div>
+        </div>
+        <div class="hi-visual">
+          <!-- AI Matches illustration — person at laptop with AI elements -->
+          <svg viewBox="0 0 280 220" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:220px;">
+            <!-- bg blob -->
+            <ellipse cx="185" cy="125" rx="102" ry="90" fill="rgba(124,58,237,0.08)"/>
+            <!-- laptop -->
+            <rect x="68" y="118" width="120" height="80" rx="8" fill="#1E293B"/>
+            <rect x="74" y="124" width="108" height="68" rx="5" fill="#334155"/>
+            <!-- screen content — match lines -->
+            <rect x="82" y="132" width="45" height="6" rx="3" fill="#7C3AED" opacity=".8"/>
+            <rect x="82" y="142" width="60" height="4" rx="2" fill="#CBD5E1" opacity=".5"/>
+            <rect x="82" y="150" width="50" height="4" rx="2" fill="#CBD5E1" opacity=".4"/>
+            <rect x="82" y="158" width="40" height="4" rx="2" fill="#CBD5E1" opacity=".3"/>
+            <!-- match score bar -->
+            <rect x="82" y="168" width="92" height="8" rx="4" fill="#1E293B"/>
+            <rect x="82" y="168" width="72" height="8" rx="4" fill="url(#matchGrad)"/>
+            <defs><linearGradient id="matchGrad"><stop stop-color="#7C3AED"/><stop offset="1" stop-color="#60A5FA"/></linearGradient></defs>
+            <!-- laptop base -->
+            <rect x="58" y="196" width="140" height="10" rx="5" fill="#0F172A"/>
+            <!-- person -->
+            <ellipse cx="128" cy="210" rx="35" ry="12" fill="rgba(124,58,237,0.10)"/>
+            <rect x="104" y="118" width="48" height="62" rx="24" fill="#4F46E5"/>
+            <rect x="108" y="118" width="40" height="30" rx="20" fill="#6366F1"/>
+            <!-- head -->
+            <circle cx="128" cy="98" r="26" fill="#FBBF24"/>
+            <circle cx="119" cy="95" r="4" fill="#1F2937"/>
+            <circle cx="137" cy="95" r="4" fill="#1F2937"/>
+            <path d="M120 111 Q128 118 136 111" stroke="#1F2937" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+            <!-- hair -->
+            <path d="M102 92 Q104 75 128 73 Q152 75 154 92" fill="#1F2937"/>
+            <!-- floating items: bag + wallet -->
+            <rect x="185" y="48" width="46" height="36" rx="6" fill="#2563EB" opacity=".85"/>
+            <path d="M195 48v-5a10 10 0 0 1 20 0v5" stroke="#1E40AF" stroke-width="2.5" stroke-linecap="round"/>
+            <rect x="192" y="56" width="22" height="16" rx="4" fill="#3B82F6"/>
+            <!-- wallet -->
+            <rect x="196" y="115" width="46" height="32" rx="6" fill="#D97706" opacity=".85"/>
+            <rect x="196" y="115" width="46" height="12" rx="6" fill="#F59E0B" opacity=".85"/>
+            <!-- lightbulb -->
+            <circle cx="230" cy="80" r="15" fill="#FEF3C7"/>
+            <circle cx="230" cy="80" r="11" fill="#FDE68A"/>
+            <path d="M224 80 Q226 72 230 72 Q234 72 236 80" fill="#F59E0B"/>
+            <rect x="226" y="89" width="8" height="4" rx="2" fill="#D97706"/>
+            <!-- sparkles -->
+            <text x="55" y="78" font-size="14" fill="#A78BFA" opacity=".7">✦</text>
+            <text x="248" y="155" font-size="12" fill="#60A5FA" opacity=".8">✦</text>
+            <text x="170" y="105" font-size="10" fill="#FBBF24" opacity=".6">✦</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container page-wrapper">
+    <div id="matchesContainer" class="row g-4"></div>
+  </div>
+
+  <footer>UniLost &copy; 2026 &nbsp;·&nbsp; Campus Lost &amp; Found</footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/common.js"></script><script src="js/matches.js"></script>
+</body></html>
